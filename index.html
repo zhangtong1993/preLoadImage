@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>图片预加载</title>
+    <script>
+        //---------------------------------------------------------------------------
+        // 内部处理逻辑
+
+        var imageDic={};
+        //传进一个数组
+        function loadImageArr(_arr){
+            if(!_arr) return;
+            for(var i=0;i<_arr.length;i++){
+                loadImage(_arr[i]);
+            }
+        }
+        //将数组中每个图片进行缓存
+        function loadImage(_url){
+           if(!_url) return;
+
+           if(imageDic[_url]){
+               console.log("图片已经加载,不再缓存!",imageDic[_url],_url);
+               return;
+           }
+           console.log("加载图片",_url);
+           ///缓存图片
+           var img=new Image();
+           img.src=_url;
+           //将图片放到imageDic中
+           imageDic[_url]={img:img,url:_url,status:1};
+           console.log("imageDic中的数据",imageDic[_url]);
+       }
+        function getImage(_url){
+            console.log("获取图片数据",_url,imageDic[_url]);
+            return imageDic[_url];
+        }
+
+        //----------------------------------------------------------------------------
+        //外部调用
+
+        var imageArr=["img/1.jpg","img/2.jpg","img/3.jpg","img/4.jpg"];
+        loadImageArr(imageArr);
+
+
+        //随机取一个图片,如果已经缓存了,从缓存中取图片地址
+        var time=setInterval(function(){
+            loadImageArr(imageArr);
+            var index=parseInt(Math.random()*imageArr.length);
+            //var imgData=getImage(imageArr[index]);
+            document.getElementById("imgId").src=imageArr[index];
+        },4000);
+
+
+    </script>
+</head>
+<body>
+<img id="imgId" src="" width="400px">
+</body>
+</html>
